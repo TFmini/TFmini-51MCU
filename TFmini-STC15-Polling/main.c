@@ -30,7 +30,7 @@ unsigned int TFmini_GetValue() {
 	static unsigned char i = 0;
 	unsigned char j = 0;
 	unsigned int checksum = 0; 
-	static unsigned int rx[9];
+	static unsigned char rx[9];
 	unsigned int distance = 0;
 	if(RI) {	//serialport receive a character
 		RI = 0;
