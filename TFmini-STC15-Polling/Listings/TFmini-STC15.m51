@@ -1,0 +1,228 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    02/13/2018  14:28:14  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+C:\KEIL_C51\C51\BIN\BL51.EXE .\Objects\main.obj TO .\Objects\TFmini-STC15 PRINT (.\Listings\TFmini-STC15.m51) RAMSIZE (2
+>> 56)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\main.obj (MAIN)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?ULDIV)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?ULSHR)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (PRINTF)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C_INIT)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?CLDPTR)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?CSTPTR)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?PLDIIDATA)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?CCASE)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (PUTCHAR)
+
+
+LINK MAP OF MODULE:  .\Objects\TFmini-STC15 (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0016H     UNIT         _DATA_GROUP_
+                    001EH     0002H                  *** GAP ***
+            BIT     0020H.0   0001H.1   UNIT         _BIT_GROUP_
+                    0021H.1   0000H.7                *** GAP ***
+            DATA    0022H     0013H     UNIT         ?DT?MAIN
+            IDATA   0035H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     035CH     UNIT         ?PR?PRINTF?PRINTF
+            CODE    035FH     016FH     UNIT         ?C?LIB_CODE
+            CODE    04CEH     008CH     UNIT         ?C_C51STARTUP
+            CODE    055AH     0071H     UNIT         ?PR?TFMINI_GETVALUE?MAIN
+            CODE    05CBH     0055H     UNIT         ?PR?_UART_INIT?MAIN
+            CODE    0620H     0042H     UNIT         ?PR?MAIN?MAIN
+            CODE    0662H     0027H     UNIT         ?PR?PUTCHAR?PUTCHAR
+            CODE    0689H     0016H     UNIT         ?CO?MAIN
+            CODE    069FH     0004H     UNIT         ?C_INITSEG
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\TFmini-STC15 (MAIN)
+
+
+SEGMENT                             BIT_GROUP          DATA_GROUP 
+  +--> CALLED SEGMENT            START    LENGTH     START    LENGTH
+--------------------------------------------------------------------
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  02/13/2018  14:28:14  PAGE 2
+
+
+?C_C51STARTUP                    -----    -----      -----    -----
+  +--> ?PR?MAIN?MAIN
+  +--> ?C_INITSEG
+
+?PR?MAIN?MAIN                    -----    -----      0008H    0002H
+  +--> ?PR?_UART_INIT?MAIN
+  +--> ?CO?MAIN
+  +--> ?PR?PRINTF?PRINTF
+  +--> ?PR?TFMINI_GETVALUE?MAIN
+
+?PR?_UART_INIT?MAIN              -----    -----      000AH    0004H
+
+?PR?PRINTF?PRINTF                0020H.0  0001H.1    000AH    0014H
+  +--> ?PR?PUTCHAR?PUTCHAR
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\TFmini-STC15 (MAIN)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00A0H         PUBLIC        P2
+  D:00B0H         PUBLIC        P3
+  D:00C0H         PUBLIC        P4
+  D:00C8H         PUBLIC        P5
+  D:00E8H         PUBLIC        P6
+  D:00F8H         PUBLIC        P7
+  D:00A8H         PUBLIC        IE
+  C:05CBH         PUBLIC        _Uart_Init
+  D:00B8H         PUBLIC        IP
+  B:0098H.0       PUBLIC        RI
+  D:00D8H         PUBLIC        CCON
+  C:0620H         PUBLIC        main
+  D:0099H         PUBLIC        SBUF
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  D:0088H         PUBLIC        TCON
+  D:008EH         PUBLIC        AUXR
+  C:055AH         PUBLIC        TFmini_GetValue
+  D:008DH         PUBLIC        TH1
+  D:008BH         PUBLIC        TL1
+  B:0088H.6       PUBLIC        TR1
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          _UART_INIT
+  D:000AH         SYMBOL        baudrate
+  C:05CBH         LINE#         15
+  C:05D3H         LINE#         16
+  C:05D6H         LINE#         17
+  C:05D9H         LINE#         18
+  C:05DCH         LINE#         19
+  C:05F2H         LINE#         20
+  C:061AH         LINE#         21
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  02/13/2018  14:28:14  PAGE 3
+
+
+  C:061CH         LINE#         22
+  C:061FH         LINE#         23
+  -------         ENDPROC       _UART_INIT
+  -------         PROC          TFMINI_GETVALUE
+  -------         DO            
+  D:0022H         SYMBOL        i
+  D:0007H         SYMBOL        j
+  D:0004H         SYMBOL        checksum
+  D:0023H         SYMBOL        rx
+  D:0002H         SYMBOL        distance
+  -------         ENDDO         
+  C:055AH         LINE#         29
+  C:055AH         LINE#         31
+  C:055BH         LINE#         32
+  C:055DH         LINE#         34
+  C:055FH         LINE#         35
+  C:0562H         LINE#         36
+  C:0564H         LINE#         37
+  C:0575H         LINE#         38
+  C:057DH         LINE#         39
+  C:057DH         LINE#         40
+  C:058CH         LINE#         41
+  C:058CH         LINE#         42
+  C:0594H         LINE#         43
+  C:0595H         LINE#         44
+  C:05A6H         LINE#         45
+  C:05AAH         LINE#         46
+  C:05B2H         LINE#         47
+  C:05BFH         LINE#         48
+  C:05BFH         LINE#         49
+  C:05C2H         LINE#         50
+  C:05C4H         LINE#         51
+  C:05C6H         LINE#         52
+  C:05C6H         LINE#         53
+  C:05C6H         LINE#         54
+  C:05CAH         LINE#         55
+  -------         ENDPROC       TFMINI_GETVALUE
+  -------         PROC          MAIN
+  -------         DO            
+  D:0008H         SYMBOL        distance
+  -------         ENDDO         
+  C:0620H         LINE#         57
+  C:0620H         LINE#         58
+  C:0625H         LINE#         60
+  C:062EH         LINE#         62
+  C:0637H         LINE#         64
+  C:0637H         LINE#         65
+  C:063EH         LINE#         66
+  C:0644H         LINE#         67
+  C:064BH         LINE#         68
+  C:0651H         LINE#         69
+  C:0660H         LINE#         70
+  C:0660H         LINE#         71
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        ?C?ULDIV
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  02/13/2018  14:28:14  PAGE 4
+
+
+  C:039BH         PUBLIC        ?C?ULDIV
+  -------         ENDMOD        ?C?ULDIV
+
+  -------         MODULE        ?C?ULSHR
+  C:042DH         PUBLIC        ?C?ULSHR
+  -------         ENDMOD        ?C?ULSHR
+
+  -------         MODULE        PRINTF
+  D:000AH         PUBLIC        ?_PRINTF517?BYTE
+  D:000AH         PUBLIC        ?_PRINTF?BYTE
+  D:000AH         PUBLIC        ?_SPRINTF517?BYTE
+  D:000AH         PUBLIC        ?_SPRINTF?BYTE
+  C:0065H         PUBLIC        _PRINTF
+  C:0065H         PUBLIC        _PRINTF517
+  C:005FH         PUBLIC        _SPRINTF
+  C:005FH         PUBLIC        _SPRINTF517
+  -------         ENDMOD        PRINTF
+
+  -------         MODULE        ?C?CLDPTR
+  C:0440H         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        ?C?CLDOPTR
+  C:0459H         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+  -------         MODULE        ?C?CSTPTR
+  C:0486H         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+
+  -------         MODULE        ?C?PLDIIDATA
+  C:0498H         PUBLIC        ?C?PLDIIDATA
+  -------         ENDMOD        ?C?PLDIIDATA
+
+  -------         MODULE        ?C?CCASE
+  C:04A8H         PUBLIC        ?C?CCASE
+  -------         ENDMOD        ?C?CCASE
+
+  -------         MODULE        PUTCHAR
+  C:0662H         PUBLIC        _PUTCHAR
+  -------         ENDMOD        PUTCHAR
+
+Program Size: data=51.1 xdata=0 code=1699
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
