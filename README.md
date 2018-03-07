@@ -3,9 +3,9 @@ TFmini在51单片机上的一些例程.
 
 以STC的51单片机为例, STC单片机既有经典的STC89, 也有STC12, STC15, STC8等, 自带的串口数至少有1个, 如果连接TFmini的话, TFmini发送数据的时候只需要TFmini的TX连接单片机的RX即可, 单片机的TX可以空出来做其他事, 比如打印数据到电脑或者串口屏. 如果自带的硬件串口实在分不出来给TFmini, 还可以使用定时器模拟串口的方法, 找任意IO口做模拟串口连接TFmini即可.  
 
-- [TFmini_STC15W204S_HardwareSerial](#tfministc15w204shardwareserial)  
-- [TFmini_STC15W204S_SoftwareSerial](#tfministc15w204ssoftwareserial)  
-- [TFmini_STC15_Polling](#tfministc15polling)  
+- [TFmini_STC15W204S_HardwareSerial](#tfmini_stc15w204s_hardwareserial)  
+- [TFmini_STC15W204S_SoftwareSerial](#tfmini_stc15w204s_softwareserial)  
+- [TFmini_STC15_Polling](#tfmini_stc15_polling)  
 
 ## TFmini_STC15W204S_HardwareSerial
 STC15W204S, SOP-8封装的有一个串口, 定时器有0和2, 没有1. 这里我们选择定时器2作为串口1的波特率发生器. 因为下载程序和TFmini都要用到同一个串口, 所以, 我们先下载程序, 下完后拔掉STC15W204S的RX连线, 接上TFmini的TX即可.   
