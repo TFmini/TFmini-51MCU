@@ -1,0 +1,219 @@
+C51 COMPILER V9.57.0.0   MAIN                                                              03/07/2018 14:15:18 PAGE 1   
+
+
+C51 COMPILER V9.57.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_C51\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) PRINT(.\Listings\main.lst) OBJECT(.\Objects\ma
+                    -in.obj)
+
+line level    source
+
+   1          #include <stdio.h>      //used printf
+   2          #include "stc15f2k60s2.h"       //from STC-ISP V6.86, Used for all STC15 MCUs.  
+   3          
+   4          // #define FOSC 11059200L       //System frequency
+   5          #define FOSC 33177600L  //System frequency
+   6          
+   7          #define RXB P54
+   8          #define TXB P55
+   9          
+  10          typedef bit BOOL;
+  11          typedef unsigned char BYTE;
+  12          typedef unsigned int WORD;
+  13          BYTE TBUF,RBUF;
+  14          BYTE TDAT,RDAT;
+  15          BYTE TCNT,RCNT;
+  16          BYTE TBIT,RBIT;
+  17          BOOL TING,RING;
+  18          BOOL TEND,REND;
+  19          
+  20          BYTE t, r;
+  21          BYTE buf[16];
+  22          
+  23          typedef struct {
+  24                  int distance;
+  25                  int strength;
+  26                  char receiveComplete;
+  27          }TFmini;
+  28          
+  29          TFmini tfmini = {0, 0, 0}; 
+  30          
+  31          /******************************************************************************
+  32           TFmini 9 bytes output: 
+  33           [0x59, 0x59, distanceL, distanceH, strengthL, strengthH, Mode, 0x00, checksum]
+  34           *****************************************************************************/
+  35          void getTFminiData(TFmini *tfmini) {
+  36   1              static unsigned char i = 0 ;
+  37   1              unsigned char j = 0;
+  38   1              unsigned int checksum = 0;
+  39   1              static unsigned int rx[9];
+  40   1              if(REND) {
+  41   2                      REND = 0;
+  42   2                      rx[i] = RBUF;
+  43   2                      //printf("%d ", rx[i]);
+  44   2                      if(rx[0] != 0x59) {
+  45   3                              i = 0;
+  46   3                      } else if(i == 1 && rx[1] != 0x59) {
+  47   3                              i = 0;
+  48   3                      } else if(i == 8) {
+  49   3                              //printf("\r\n");
+  50   3                              for(j = 0; j < 8; j++) {
+  51   4                                      checksum += rx[j];
+  52   4                              } 
+  53   3                              if(rx[8] == (checksum % 256)) {
+  54   4                                      tfmini->distance = rx[2] + rx[3] * 256;
+C51 COMPILER V9.57.0.0   MAIN                                                              03/07/2018 14:15:18 PAGE 2   
+
+  55   4                                      tfmini->strength = rx[4] + rx[5] * 256;
+  56   4                                      tfmini->receiveComplete = 1;
+  57   4                              }
+  58   3                              i = 0;
+  59   3                      } else {
+  60   3                              i++;
+  61   3                      }
+  62   2              }
+  63   1      }
+  64          
+  65          /******************************************************************************
+  66           Timer 0 and 2 can be used, STC15W204S don't have Timer 1.
+  67           *****************************************************************************/
+  68          void softwareUart_Init(unsigned long baudrate) {
+  69   1              TING = 0;
+  70   1          RING = 0;
+  71   1          TEND = 1;
+  72   1          REND = 0;
+  73   1          TCNT = 0;
+  74   1          RCNT = 0;
+  75   1              
+  76   1              TMOD = 0x00;    //timer0 in 16-bit auto reload mode
+  77   1          AUXR |= 0x80;       //timer0 working at 1T mode
+  78   1              //BAUD = 65536 - FOSC/3/BAUDRATE/M (1T:M=1; 12T:M=12), 3 times sampling rate
+  79   1              //NOTE: (FOSC/3/BAUDRATE) must be greater then 98, (RECOMMEND GREATER THAN 110)
+  80   1          TL0 = (65536 - (FOSC/3/baudrate));
+  81   1          TH0 = (65536 - (FOSC/3/baudrate))>>8;       //initial timer0 and set reload value
+  82   1          TR0 = 1;    //tiemr0 start running
+  83   1          ET0 = 1;    //enable timer0 interrupt
+  84   1          PT0 = 1;    //improve timer0 interrupt priority
+  85   1          EA = 1;             //open global interrupt switch
+  86   1      }
+  87          
+  88          void Uart_Init(unsigned long baudrate) {
+  89   1          SCON = 0x50;        //8-bit variable UART
+  90   1              AUXR |= 0x14;   //set Timer2 1T Mode, and start Timer2
+  91   1              AUXR |= 0x01;   //select Timer 2 as Uart 1 baud generator
+  92   1              T2L = (65536 - (FOSC/4/baudrate));   //Set auto-reload vaule
+  93   1          T2H = (65536 - (FOSC/4/baudrate))>>8;
+  94   1              ES = 1;
+  95   1              EA = 1;
+  96   1              SBUF = '\n';    //It's needed to give SBUF a random character if printf is used.
+  97   1      }
+  98                  
+  99          void main() {
+ 100   1              Uart_Init(115200);
+ 101   1              softwareUart_Init(115200);
+ 102   1              
+ 103   1              printf("Hello, TFmini!\r\n");
+ 104   1              
+ 105   1              while(1) {
+ 106   2                      // if (REND)
+ 107   2              // {
+ 108   2              //     REND = 0;
+ 109   2              //     buf[r++ & 0x0f] = RBUF;
+ 110   2                      //      printf("%c ", RBUF);
+ 111   2              // }
+ 112   2              // if (TEND)
+ 113   2              // {
+ 114   2              //     if (t != r)
+ 115   2              //     {
+ 116   2              //         TEND = 0;
+C51 COMPILER V9.57.0.0   MAIN                                                              03/07/2018 14:15:18 PAGE 3   
+
+ 117   2              //         TBUF = buf[t++ & 0x0f];
+ 118   2              //         TING = 1;
+ 119   2              //     }
+ 120   2              // }
+ 121   2      
+ 122   2              getTFminiData(&tfmini);
+ 123   2                      if(tfmini.receiveComplete == 1) {
+ 124   3                              tfmini.receiveComplete = 0;
+ 125   3                              printf("(%d, %d)\r\n", tfmini.distance, tfmini.strength);
+ 126   3                      } 
+ 127   2              }
+ 128   1      }
+ 129          
+ 130          void Uart() interrupt 4 using 1 {       
+ 131   1      }
+ 132          
+ 133          //Timer interrupt routine for UART
+ 134          void tm0() interrupt 1 using 1
+ 135          {
+ 136   1          if (RING)
+ 137   1          {
+ 138   2              if (--RCNT == 0)
+ 139   2              {
+ 140   3                  RCNT = 3;                   //reset send baudrate counter
+ 141   3                  if (--RBIT == 0)
+ 142   3                  {
+ 143   4                      RBUF = RDAT;            //save the data to RBUF
+ 144   4                      RING = 0;               //stop receive
+ 145   4                      REND = 1;               //set receive completed flag
+ 146   4                  }
+ 147   3                  else
+ 148   3                  {
+ 149   4                      RDAT >>= 1;
+ 150   4                      if (RXB) RDAT |= 0x80;  //shift RX data to RX buffer
+ 151   4                  }
+ 152   3              }
+ 153   2          }
+ 154   1          else if (!RXB)
+ 155   1          {
+ 156   2              RING = 1;                       //set start receive flag
+ 157   2              RCNT = 4;                       //initial receive baudrate counter
+ 158   2              RBIT = 9;                       //initial receive bit number (8 data bits + 1 stop bit)
+ 159   2          }
+ 160   1      
+ 161   1          if (--TCNT == 0)
+ 162   1          {
+ 163   2              TCNT = 3;                       //reset send baudrate counter
+ 164   2              if (TING)                       //judge whether sending
+ 165   2              {
+ 166   3                  if (TBIT == 0)
+ 167   3                  {
+ 168   4                      TXB = 0;                //send start bit
+ 169   4                      TDAT = TBUF;            //load data from TBUF to TDAT
+ 170   4                      TBIT = 9;               //initial send bit number (8 data bits + 1 stop bit)
+ 171   4                  }
+ 172   3                  else
+ 173   3                  {
+ 174   4                      TDAT >>= 1;             //shift data to CY
+ 175   4                      if (--TBIT == 0)
+ 176   4                      {
+ 177   5                          TXB = 1;
+ 178   5                          TING = 0;           //stop send
+C51 COMPILER V9.57.0.0   MAIN                                                              03/07/2018 14:15:18 PAGE 4   
+
+ 179   5                          TEND = 1;           //set send completed flag
+ 180   5                      }
+ 181   4                      else
+ 182   4                      {
+ 183   5                          TXB = CY;           //write CY to TX port
+ 184   5                      }
+ 185   4                  }
+ 186   3              }
+ 187   2          }
+ 188   1      }
+ 189          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    501    ----
+   CONSTANT SIZE    =     28    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     50       8
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      4    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

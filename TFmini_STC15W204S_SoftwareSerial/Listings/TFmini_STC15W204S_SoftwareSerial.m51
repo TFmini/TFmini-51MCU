@@ -1,0 +1,160 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    03/07/2018  14:15:18  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+C:\KEIL_C51\C51\BIN\BL51.EXE .\Objects\main.obj TO .\Objects\TFmini_STC15W204S_SoftwareSerial PRINT (.\Listings\TFmini_S
+>> TC15W204S_SoftwareSerial.m51) RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\main.obj (MAIN)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?CSTOPTR)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?ISTPTR)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?ISTOPTR)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?ULDIV)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?ULSHR)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (PRINTF)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C_INIT)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?CLDPTR)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?CSTPTR)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?PLDIIDATA)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (?C?CCASE)
+  C:\KEIL_C51\C51\LIB\C51S.LIB (PUTCHAR)
+
+
+LINK MAP OF MODULE:  .\Objects\TFmini_STC15W204S_SoftwareSerial (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0014H     UNIT         _DATA_GROUP_
+                    001CH     0004H                  *** GAP ***
+            BIT     0020H.0   0001H.1   UNIT         _BIT_GROUP_
+            BIT     0021H.1   0000H.4   UNIT         ?BI?MAIN
+                    0021H.5   0000H.3                *** GAP ***
+            DATA    0022H     0032H     UNIT         ?DT?MAIN
+            IDATA   0054H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0001H     UNIT         ?PR?UART?MAIN
+                    0004H     0007H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     000BH     UNIT         ?C_INITSEG
+                    0019H     000AH                  *** GAP ***
+            CODE    0023H     0003H     ABSOLUTE     
+            CODE    0026H     035CH     UNIT         ?PR?PRINTF?PRINTF
+            CODE    0382H     01DDH     UNIT         ?C?LIB_CODE
+            CODE    055FH     008CH     UNIT         ?PR?_GETTFMINIDATA?MAIN
+            CODE    05EBH     008CH     UNIT         ?C_C51STARTUP
+            CODE    0677H     0067H     UNIT         ?PR?TM0?MAIN
+            CODE    06DEH     0061H     UNIT         ?PR?_SOFTWAREUART_INIT?MAIN
+            CODE    073FH     0059H     UNIT         ?PR?_UART_INIT?MAIN
+            CODE    0798H     0047H     UNIT         ?PR?MAIN?MAIN
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/07/2018  14:15:18  PAGE 2
+
+
+            CODE    07DFH     0027H     UNIT         ?PR?PUTCHAR?PUTCHAR
+            CODE    0806H     001CH     UNIT         ?CO?MAIN
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\TFmini_STC15W204S_SoftwareSerial (MAIN)
+
+
+SEGMENT                                BIT_GROUP          DATA_GROUP 
+  +--> CALLED SEGMENT               START    LENGTH     START    LENGTH
+-----------------------------------------------------------------------
+?C_C51STARTUP                       -----    -----      -----    -----
+  +--> ?PR?MAIN?MAIN
+  +--> ?C_INITSEG
+
+?PR?MAIN?MAIN                       -----    -----      -----    -----
+  +--> ?PR?_UART_INIT?MAIN
+  +--> ?PR?_SOFTWAREUART_INIT?MAIN
+  +--> ?CO?MAIN
+  +--> ?PR?PRINTF?PRINTF
+  +--> ?PR?_GETTFMINIDATA?MAIN
+
+?PR?_UART_INIT?MAIN                 -----    -----      0008H    0004H
+
+?PR?_SOFTWAREUART_INIT?MAIN         -----    -----      0008H    0004H
+
+?PR?PRINTF?PRINTF                   0020H.0  0001H.1    0008H    0014H
+  +--> ?PR?PUTCHAR?PUTCHAR
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\TFmini_STC15W204S_SoftwareSerial (MAIN)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        ?C?CSTOPTR
+  C:0382H         PUBLIC        ?C?CSTOPTR
+  -------         ENDMOD        ?C?CSTOPTR
+
+  -------         MODULE        ?C?ISTPTR
+  C:03A4H         PUBLIC        ?C?ISTPTR
+  -------         ENDMOD        ?C?ISTPTR
+
+  -------         MODULE        ?C?ISTOPTR
+  C:03C3H         PUBLIC        ?C?ISTOPTR
+  -------         ENDMOD        ?C?ISTOPTR
+
+  -------         MODULE        ?C?ULDIV
+  C:042CH         PUBLIC        ?C?ULDIV
+  -------         ENDMOD        ?C?ULDIV
+
+  -------         MODULE        ?C?ULSHR
+  C:04BEH         PUBLIC        ?C?ULSHR
+  -------         ENDMOD        ?C?ULSHR
+
+  -------         MODULE        PRINTF
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/07/2018  14:15:18  PAGE 3
+
+
+  D:0008H         PUBLIC        ?_PRINTF517?BYTE
+  D:0008H         PUBLIC        ?_PRINTF?BYTE
+  D:0008H         PUBLIC        ?_SPRINTF517?BYTE
+  D:0008H         PUBLIC        ?_SPRINTF?BYTE
+  C:0088H         PUBLIC        _PRINTF
+  C:0088H         PUBLIC        _PRINTF517
+  C:0082H         PUBLIC        _SPRINTF
+  C:0082H         PUBLIC        _SPRINTF517
+  -------         ENDMOD        PRINTF
+
+  -------         MODULE        ?C?CLDPTR
+  C:04D1H         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        ?C?CLDOPTR
+  C:04EAH         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+  -------         MODULE        ?C?CSTPTR
+  C:0517H         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+
+  -------         MODULE        ?C?PLDIIDATA
+  C:0529H         PUBLIC        ?C?PLDIIDATA
+  -------         ENDMOD        ?C?PLDIIDATA
+
+  -------         MODULE        ?C?CCASE
+  C:0539H         PUBLIC        ?C?CCASE
+  -------         ENDMOD        ?C?CCASE
+
+  -------         MODULE        PUTCHAR
+  C:07DFH         PUBLIC        _PUTCHAR
+  -------         ENDMOD        PUTCHAR
+
+Program Size: data=80.5 xdata=0 code=2065
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
