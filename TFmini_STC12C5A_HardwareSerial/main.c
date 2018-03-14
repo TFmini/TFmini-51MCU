@@ -1,5 +1,5 @@
-#include <stdio.h>	//used printf
-#include "stc15f2k60s2.h"	//from STC-ISP V6.86, Used for all STC15 MCUs.  
+#include <stdio.h>
+#include "stc12c5a60s2.h"	//the file come from stc-sip V6.86
 
 #define FOSC 11059200L	//System frequency
 
@@ -19,16 +19,17 @@ void getTFminiData(TFmini *tfmini) {
 	static unsigned char i = 0 ;
 	unsigned char j = 0;
 	unsigned int checksum = 0;
-	static unsigned int rx[9];
-	if(RI) {
-		RI = 0;
-		rx[i] = SBUF;
-		//printf("%d ", rx[i]);
+	static unsigned char rx[9];
+	
+	if(S2CON & 0x01) {	//uart2 receive interrupt flag 
+		S2CON &= ~(0x01);	//clear uart2 receive interrupt flag
+		rx[i] = S2BUF;	//uart2 buf
 		if(rx[0] != 0x59) {
 			i = 0;
 		} else if(i == 1 && rx[1] != 0x59) {
 			i = 0;
 		} else if(i == 8) {
+			tfmini->receiveComplete = 1;
 			//printf("\r\n");
 			for(j = 0; j < 8; j++) {
 				checksum += rx[j];
@@ -46,22 +47,35 @@ void getTFminiData(TFmini *tfmini) {
 }
 
 /******************************************************************************
- Timer 0 and 2 can be used, STC15W204S don't have Timer 1.
+ Timer2 as baudtare generator.
+ When FOSC = 11059200L, baudrate <= 345600(11059200/32) 
  *****************************************************************************/
-void Uart_Init(unsigned long baudrate) {
-    SCON = 0x50;	//8-bit variable UART
-	AUXR = 0x14;	//set Timer2 1T Mode, and start Timer2
-	AUXR |= 0x01;	//select Timer 2 as Uart 1 baud generator
-	T2L = (65536 - (FOSC/4/baudrate));   //Set auto-reload vaule
-    T2H = (65536 - (FOSC/4/baudrate))>>8;
-	ES = 1;
+void Uart_Init(unsigned long baudrate1, unsigned long baudrate2) {
+	
+	//Uart1 Init. Uart1 can select Timer1 or BRT as baudrate generator
+	SCON = 0x50;            //8-bit variable UART
+	//AUXR |= 0x01;			//selectBRT as baudrate generator
+	AUXR |= 0x40;			//Set Timer1 1T Mode
+	TMOD |= 0x20;   		//Set Timer1 as 8-bit auto reload mode
+	TH1 = TL1 = -(FOSC/32/baudrate1); //Set auto-reload vaule
+	TR1 = 1;                //Timer1 start run
+	//ES = 1;
+	
+	//Uart2 Init. Uart2 can only select BRT as baudrate generator
+	S2CON = 0x50;           //8-bit variable UART
+	BRT = -(FOSC/32/baudrate2);  //Set auto-reload vaule of baudrate generator
+	AUXR |= 0x14;            //Baudrate generator work in 1T mode
+	IE2 = 0x01;             //Enable UART2 interrupt
+		
 	EA = 1;
+	
 	SBUF = '\n';	//It's needed to give SBUF a random character if printf is used.
 }
-	
+
 void main() {
 	 
-	Uart_Init(115200);
+	Uart_Init(115200, 115200);
+	
 	printf("Hello, TFmini!\r\n");
 	
 	while(1) {
@@ -72,7 +86,12 @@ void main() {
 	}
 }
 
-void Uart() interrupt 4 using 1 {	
+//void Uart() interrupt 4 using 1 {	
+//}
+
+void Uart2() interrupt 8 using 1 {
 	getTFminiData(&tfmini);
 }
+
+
 

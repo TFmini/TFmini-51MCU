@@ -1,5 +1,5 @@
-#include <stdio.h>	//used printf
-#include "stc15f2k60s2.h"	//from STC-ISP V6.86, Used for all STC15 MCUs.  
+#include <stdio.h>
+#include <reg52.h>
 
 #define FOSC 11059200L	//System frequency
 
@@ -23,7 +23,6 @@ void getTFminiData(TFmini *tfmini) {
 	if(RI) {
 		RI = 0;
 		rx[i] = SBUF;
-		//printf("%d ", rx[i]);
 		if(rx[0] != 0x59) {
 			i = 0;
 		} else if(i == 1 && rx[1] != 0x59) {
@@ -46,19 +45,20 @@ void getTFminiData(TFmini *tfmini) {
 }
 
 /******************************************************************************
- Timer 0 and 2 can be used, STC15W204S don't have Timer 1.
+ Timer2 as baudtare generator.
+ When FOSC = 11059200L, baudrate <= 345600(11059200/32) 
  *****************************************************************************/
 void Uart_Init(unsigned long baudrate) {
     SCON = 0x50;	//8-bit variable UART
-	AUXR = 0x14;	//set Timer2 1T Mode, and start Timer2
-	AUXR |= 0x01;	//select Timer 2 as Uart 1 baud generator
-	T2L = (65536 - (FOSC/4/baudrate));   //Set auto-reload vaule
-    T2H = (65536 - (FOSC/4/baudrate))>>8;
+	TL2 = RCAP2L  = (65536 - (FOSC/32/baudrate));   //Set auto-reload vaule
+    TH2 = RCAP2H  = (65536 - (FOSC/32/baudrate))>>8;
+	T2CON = 0x34;	//Timer2 as baudtare generator, Timer2 start run
 	ES = 1;
 	EA = 1;
+	
 	SBUF = '\n';	//It's needed to give SBUF a random character if printf is used.
 }
-	
+
 void main() {
 	 
 	Uart_Init(115200);

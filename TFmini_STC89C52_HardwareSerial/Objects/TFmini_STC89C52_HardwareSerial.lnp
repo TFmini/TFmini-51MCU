@@ -1,0 +1,3 @@
+".\Objects\main.obj" 
+TO ".\Objects\TFmini_STC89C52_HardwareSerial" 
+NOPRINT RAMSIZE(256) 

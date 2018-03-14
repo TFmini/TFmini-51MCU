@@ -3,9 +3,122 @@ TFmini在51单片机上的一些例程.
 
 以STC的51单片机为例, STC单片机既有经典的STC89, 也有STC12, STC15, STC8等, 自带的串口数至少有1个, 如果连接TFmini的话, TFmini发送数据的时候只需要TFmini的TX连接单片机的RX即可, 单片机的TX可以空出来做其他事, 比如打印数据到电脑或者串口屏. 如果自带的硬件串口实在分不出来给TFmini, 还可以使用定时器模拟串口的方法, 找任意IO口做模拟串口连接TFmini即可.  
 
+**注意下载程序的时候单片机型号不要选择错误, 可以使用STC-ISP的 检测MCU选项, 可以自动选择出单片机型号**.  
+
+- [TFmini_STC89C52_HardwareSerial](#tfmini_stc89c52_hardwareserial)  
+- [TFmini_STC12C5A_HardwareSerial](#tfmini_stc12c5a_hardwareserial)  
 - [TFmini_STC15W204S_HardwareSerial](#tfmini_stc15w204s_hardwareserial)  
 - [TFmini_STC15W204S_SoftwareSerial](#tfmini_stc15w204s_softwareserial)  
 - [TFmini_STC15_Polling](#tfmini_stc15_polling)  
+
+
+
+
+## TFmini_STC89C52_HardwareSerial
+STC89C52有一个硬件串口, 也可以用定时器实现软件串口(参考 [TFmini_STC15W204S_SoftwareSerial](#tfmini_stc15w204s_softwareserial) 一节). 先下载程序:  
+
+下载程序时的连接关系:  
+
+STC89C52 | USB转串口(CH340, CP2102等)
+---------|----------
+ VCC | 5V 
+ GND | GND 
+ P30(RX) | TX
+ P31(TX) | RX   
+
+ STC-ISP的配置:  
+
+ ![stcispstc89](/Assets/stcispstc89.png)  
+
+ **下完程序后才可以连接TFmini**, 把TFmini的TX(绿线)连到STC89C52的RX(P30)即可, TFminid的RX(白线)可以悬空不接. 连接关系如下:  
+
+STC89C52 | USB转串口 | TFmini
+---------|----------|----------
+ VCC | 5V | 5V(红)
+ GND | GND | GND(黑)
+ P30(RX) | | TX(绿)
+ P31(TX) | RX | 
+
+ 如图(板载晶振为11.0592MHz):  
+
+ ![stc89](/Assets/stc89.png)   
+
+ 打开串口调试助手, 选择正确的串口, 波特率115200, 数据左边为距离, 单位cm, 右边为信号强度:  
+
+ ![sscom89](/Assets/sscom89.png)    
+
+ TFmini的9字节输出解析可参考下面的代码:  
+
+ ```C
+ typedef struct {
+	int distance;
+	int strength;
+	char receiveComplete;
+}TFmini;
+
+TFmini tfmini = {0, 0, 0}; 
+
+/******************************************************************************
+ TFmini 9 bytes output: 
+ [0x59, 0x59, distanceL, distanceH, strengthL, strengthH, Mode, 0x00, checksum]
+ *****************************************************************************/
+void getTFminiData(TFmini *tfmini) {
+	static unsigned char i = 0 ;
+	unsigned char j = 0;
+	unsigned int checksum = 0;
+	static unsigned int rx[9];	//change int to char if not work
+	if(RI) {
+		RI = 0;
+		rx[i] = SBUF;
+		if(rx[0] != 0x59) {
+			i = 0;
+		} else if(i == 1 && rx[1] != 0x59) {
+			i = 0;
+		} else if(i == 8) {
+			//printf("\r\n");
+			for(j = 0; j < 8; j++) {
+				checksum += rx[j];
+			} 
+			if(rx[8] == (checksum % 256)) {
+				tfmini->distance = rx[2] + rx[3] * 256;
+				tfmini->strength = rx[4] + rx[5] * 256;
+				tfmini->receiveComplete = 1;
+			}
+			i = 0;
+		} else {
+			i++;
+		}
+	}
+}
+ ```
+
+
+
+## TFmini_STC12C5A_HardwareSerial
+以STC12C5A60S2为例, 有两个串口. 这个例子中用串口2读取TFmini的数据, 然后通过串口1发送给PC. 串口2使用独立波特率发生器BRT, 串口1使用定时器1做波特率发生器.  硬件连接关系如下:  
+
+STC12C5A60S2 | USB转串口 | TFmini
+---------|----------|----------
+ VCC | 5V | 5V(红)
+ GND | GND | GND(黑)
+ P12(RX2) | | TX(绿)
+ P31(TX) | RX | 
+
+如图所示:  
+
+![stc12](/Assets/stc12.png)  
+
+STC-ISP的配置:  
+
+![stcispstc12](/Assets/stcispstc12.png)   
+
+打开串口调试助手, 选择正确的串口, 波特率115200, 数据左边为距离, 单位cm, 右边为信号强度:  
+
+![sscom89](/Assets/sscom89.png)    
+
+程序中的 `ES = 1;` 这句开串口总中断被注释了, 也就是串口1不能中断? 不注释掉串口2不能中断, 原因暂时不明.   
+
+
 
 ## TFmini_STC15W204S_HardwareSerial
 STC15W204S, SOP-8封装的有一个串口, 定时器有0和2, 没有1. 这里我们选择定时器2作为串口1的波特率发生器. 因为下载程序和TFmini都要用到同一个串口, 所以, 我们先下载程序, 下完后拔掉STC15W204S的RX连线, 接上TFmini的TX即可.   
