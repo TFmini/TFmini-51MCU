@@ -163,7 +163,7 @@ STC15W204S | USB serial port | TFmini
 ---------|----------|----------
  VCC | 5V | 5V(red)
  GND | GND | GND(black)
- P54(模拟RX) | | TX(green)
+ P54(simulationRX) | | TX(green)
  P31(TX) | RX |   
 
  The TFmini data is read by the analog RX (P54), and then the data is sent to the computer through the hardware serial port P31 (TX). Refer to the TFmini_STC15W204S_SoftwareSerial project for specific code. **When downloading, select the frequency as 33.1776MHz**.
@@ -172,13 +172,13 @@ STC15W204S | USB serial port | TFmini
 
 ![TFmini-STC15](/Assets/TFmini-STC15.png)  
 
-STC15有两个或者更多的串口, 但这里我们只使用一个串口, 连接方式为:   
-> TFmini TX(绿线) -- STC15 RXD(P30)  
+STC15 has two or more serial ports, but here we only use one serial port, the connection method is:  
+> TFmini TX(the green cable) -- STC15 RXD(P30)  
 > STC15 TXD(P31) -- PC USBtoUART RX
 
-注意下载程序的时候断开TFmini与STC15 P30的连线, 然后把P30连到USB转串口的RX上. 下完程序后再逆操作.   
+Note that when downloading the program, disconnect the TFmini from the STC15 P30, and then connect the P30 to the RX of the USB to serial port. After the program is finished, reverse the operation.
 
-TFmini 9字节输出数据的解析如下:  
+The TFmini 9-byte output data is parsed as follows: 
 
 ```C
 /******************************************************************************
@@ -214,5 +214,5 @@ unsigned int TFmini_GetValue() {
 }
 ```  
 
-这段程序用到轮询或者串口中断里面都是可以的. 
+This program can be used in polling or serial interrupts.
 
